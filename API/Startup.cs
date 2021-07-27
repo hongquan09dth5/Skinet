@@ -1,13 +1,10 @@
-using System.Linq;
-using API.Errors;
 using API.Extensions;
 using API.Helpers;
 using API.Middleware;
-using Core.Interfaces;
 using Infrastructure.Data;
+using Infrastructure.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,6 +31,10 @@ namespace API
             services.AddDbContext<StoreContext>(x =>
                x.UseSqlite(_config.GetConnectionString("Default")));
 
+            services.AddDbContext<AppIdentityDbContext>(x => {
+                x.UseSqlite(_config.GetConnectionString("IdentityConnection"));
+            });
+
             services.AddSingleton<IConnectionMultiplexer>(c =>
             {
                 var configuration = ConfigurationOptions.Parse(_config
@@ -42,6 +43,8 @@ namespace API
             });
 
             services.AddApplicationServices();
+            services.AddIdentityServices(_config);
+
             services.AddCors(opt =>
             {
                 opt.AddPolicy("CorsPolicy", policy =>
@@ -71,6 +74,8 @@ namespace API
             app.UseRouting();
 
             app.UseCors("CorsPolicy");
+            
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
