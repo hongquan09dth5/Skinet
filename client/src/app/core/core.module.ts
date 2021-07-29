@@ -1,3 +1,4 @@
+import { SharedModule } from './../shared/shared.module';
 import { RouterModule } from '@angular/router';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { NgModule } from '@angular/core';
@@ -9,14 +10,13 @@ import { ToastrModule } from 'ngx-toastr';
 import { SectionHeaderComponent } from './section-header/section-header.component';
 import { BreadcrumbModule } from 'xng-breadcrumb';
 
-
 @NgModule({
   declarations: [
     NavBarComponent,
     TestErrorComponent,
     NotFoundComponent,
     ServerErrorComponent,
-    SectionHeaderComponent
+    SectionHeaderComponent,
   ],
   imports: [
     CommonModule,
@@ -26,6 +26,8 @@ import { BreadcrumbModule } from 'xng-breadcrumb';
       positionClass: 'toast-bottom-right',
       preventDuplicates: true,
     }),
+
+    SharedModule,
   ],
   exports: [NavBarComponent, SectionHeaderComponent],
 })
